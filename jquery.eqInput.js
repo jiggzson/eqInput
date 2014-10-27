@@ -1,13 +1,23 @@
 (function($) {
-    $.fn.eqInput = function() {
-        var defaultOps = {},
-            options = $.extend(true, defaultOps, (typeof arguments[0] === 'object' ? [].shift.apply(arguments) : {})),
+    $.fn.eqInput = function(customOps) {
+        customOps = customOps || {};
+        var defaultOps = {
+            highlightClass: 'eqinput-marked-bracket'
+        },
+            options = $.extend(true, defaultOps, customOps),
             target = this[0],
             input = this,
             openBrackets = ['(', '[', '{'],
             closeBrackets = [')', ']', '}'];
     
-        //modified/stripped version of jquery caret: http://code.accursoft.com/caret/overview
+        if(!customOps.highlightClass) {
+            //create a default class for bracket highlighting
+            $("<style type='text/css'> ."+options.highlightClass+"{ color:#99B6DF; font-weight:bold;} </style>")
+                    .appendTo('head');
+        }
+
+        var cls = 'class="'+options.highlightClass+'"';
+
         var caret = function(pos) {
             var sel = window.getSelection();
             if(pos !== undefined) {
@@ -41,7 +51,7 @@
         },
         
         markedBracket = function(bracket) {
-            return '<span class="marked-bracket">'+bracket+'</span>';
+            return '<span '+cls+'>'+bracket+'</span>';
         },
                 
         replaceText = function(str, text, start, end) {
@@ -151,6 +161,7 @@
                 cbi = closeBrackets.indexOf(c),
                 text = input.text(),
                 pos = caret(),
+                nextChar = text.charAt(pos), //if the next character is a bracket
                 obracket = openBrackets[obi], //search the brackets
                 cbracket = closeBrackets[obi], //search the brackets
                 selectedText = getTextSelection(); //get whatever text is selected
@@ -162,7 +173,8 @@
                     bracketed; 
 
                 if(selectedText) {
-                    bracketed = text.substring(0, pos-selectedText.length) + obracket + selectedText + cbracket + text.substring(pos, text.length);
+                    var pre = text.substring(0, pos-selectedText.length);
+                    bracketed = pre + obracket + selectedText + cbracket + text.substring(pos, text.length);
                 }
                 else {
                     bracketed = beforeCaret + obracket + cbracket + remainder;
@@ -173,11 +185,22 @@
             }
 
             if(cbi !== -1) {
-                var nextChar = text.charAt(pos); //if the next character is a bracket
                 if(closeBrackets.indexOf(nextChar) !== -1 && nextChar === c) {
                     e.preventDefault();//stop the bracket from being inserted
                     caret(pos+1); //just move forward
                 } 
+            }
+            
+            if(e.keyCode === 8) {
+                var prevChar = text.charAt(pos-1),
+                    prevIndex = openBrackets.indexOf(prevChar);//check if the previous is a bracket
+                if(prevIndex !== -1) { //if it is...
+                    if(closeBrackets.indexOf(nextChar) === prevIndex) { //if they match
+                        //Let me delete the previous bracket for you
+                        input.html(replaceText(text, '', pos, pos+1)); 
+                        caret(pos);//You're welcome
+                    }
+                }
             }
         });
         
