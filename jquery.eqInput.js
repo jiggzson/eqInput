@@ -4,19 +4,15 @@
         if(window.getSelection) {
             customOps = customOps || {};
             var defaultOps = {
-                highlightClass: 'eqinput-marked-bracket'
-            },
+                    highlightClass: 'eqinput-marked-bracket'
+                },
                 options = $.extend(true, defaultOps, customOps),
                 target = this[0],
                 input = this,
                 openBrackets = ['(', '[', '{'],
                 closeBrackets = [')', ']', '}'];
-
-            if(!customOps.highlightClass) {
-                //create a default class for bracket highlighting
-                $("<style type='text/css'> ."+options.highlightClass+"{ color:#99B6DF; font-weight:bold;} </style>")
-                        .appendTo('head');
-            }
+        
+            input.attr('contenteditable','true').addClass('jquery-eqinput-input');
 
             var cls = 'class="'+options.highlightClass+'"';
 
