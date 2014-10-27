@@ -3,7 +3,7 @@ jquery eqInput
 
 A simple equation input with bracket completion and highlighting. 
 
-Uses jquery. 
+Uses jquery. And needs styling.
 
 *Does not work for IE < 9*
 
@@ -21,3 +21,5 @@ To change the highlight color and styling edit css or supply custom class
 ```javascript
 $('#eq-input').eqInput({highlightClass: 'some-custom-class'})
 ```
+
+Use text method to get input contents
