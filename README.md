@@ -12,3 +12,8 @@ _Usage:_
 ```javascript
 $('#eq-input').eqInput();
 ```
+
+To change the highlight color and styling
+```javascript
+$('#eq-input').eqInput({highlightClass: 'some-custom-class'})
+```
