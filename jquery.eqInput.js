@@ -11,9 +11,9 @@
                 input = this,
                 openBrackets = ['(', '[', '{'],
                 closeBrackets = [')', ']', '}'];
-        
-            input.attr('contenteditable','true').addClass('jquery-eqinput-input');
-
+            input.attr('contenteditable','true')
+                    .attr('spellcheck', 'false')
+                    .addClass('jquery-eqinput-input');
             var cls = 'class="'+options.highlightClass+'"';
 
             var caret = function(pos) {
@@ -152,19 +152,19 @@
                     caret(pos);
                 }
             };
-
+            
             input.keypress(function(e) {
                 var c = String.fromCharCode(e.which),
                     obi = openBrackets.indexOf(c),
                     cbi = closeBrackets.indexOf(c),
                     text = input.text(),
                     pos = caret(),
-                    nextChar = text.charAt(pos), //if the next character is a bracket
+                    nextChar = text.charAt(pos),
                     obracket = openBrackets[obi], //search the brackets
                     cbracket = closeBrackets[obi], //search the brackets
                     selectedText = getTextSelection(); //get whatever text is selected
 
-                if(obi !== -1) {
+                if(obi !== -1 && (nextChar === '' || closeBrackets.indexOf(nextChar) !== -1)) { 
                     e.preventDefault();
                     var beforeCaret = text.substring(0, pos),
                         remainder = text.substring(pos, text.length),
@@ -210,5 +210,6 @@
                 highlight();
             });
         }
+        return this;
     };
 })(jQuery);
