@@ -13,6 +13,12 @@ Load jquey.eqInput.js and jquery.eqInput.css
 ```html
 <div id="eq-input"></div>
 ```
+To add a place holder use data-placeholder attribute
+
+```html
+<div id="eq-input" data-placeholder="Insert formula"></div>
+```
+
 ```javascript
 $('#eq-input').eqInput();
 ```
